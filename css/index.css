@@ -1,0 +1,21 @@
+.main .main_nav{
+    width: 100%;
+    min-width: 100px;
+    height: auto;
+    padding: 50px 10px;
+}
+.panel-group{
+    margin-bottom: 0;
+}
+.panel-title{
+    text-align: center;
+}
+.panel-title a{
+    display: block;
+    text-decoration: none;
+}
+.panel-collapse .panel-body{
+    display: block;
+    text-decoration: none;
+    text-align: center;
+}
