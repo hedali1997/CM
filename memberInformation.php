@@ -10,7 +10,20 @@ if (!empty($_GET['id'])){
     // => 需要拿到用户想要修改的数据
     $current_edit_member=cm_fetch_one("select * from ".u_g('会员库')." where ".u_g('序号')." ='{$_GET['id']}';");
 }
-function add_category(){
+if(!empty($_GET['delete'])){
+    $GLOBALS['message'] = '删除记录成功！';
+    $GLOBALS['success'] = true;
+}
+function checkphone($phone){
+    $phones=cm_fetch_all("select ".u_g('手机号码')." from ".u_g('会员库').";");
+    for ($i=0; $i < count($phones); $i++) {
+        if(implode("",$phones[$i])==$phone){
+            return true;
+        }
+        return false;
+    }
+}
+function add_member(){
     //校验，持久化，响应
     if(empty($_POST['membername']) || empty($_POST['phonenumber']) || empty($_POST['payPwd'])){
         $GLOBALS['message'] = '请完整填写表单！会员姓名、手机号码和密码为必填项！';
@@ -30,17 +43,21 @@ function add_category(){
     $year =empty($born)? '': explode('-',$born)[0];
     $month = empty($born)? '': explode('-',$born)[1];
     $day =  empty($born)? '': explode('-',$born)[2];
-    $cardover = $_POST['cardover'];
-    $consum_point = $_POST['consum_point'];
-    $consum_amount = $_POST['consum_amount'];
     $null='';
 
+    // 判断手机号是否存在，存在返回true
+    if (checkphone($phonenum)) {
+        $GLOBALS['message'] = '手机号码已存在，请换一个手机号码输入！';
+        $GLOBALS['success'] = false;
+        return;
+    }
+
     // insert into 会员库 values('1',null,'贺大礼','17851567955','17851567955','hdl','1997-12-18','1997','12','18','100','100','123456','100');
-    $rows = cm_execute("insert into ".u_g('会员库')." values ('{$id}','{$null}','{$membername}', '{$phonenum}', '{$weixin}', '{$pinyin}', '{$born}', '{$year}', '{$month}', '{$day}', '{$cardover}', '{$consum_amount}', '{$payPwd}', '{$consum_point}');");
+    $rows = cm_execute("insert into ".u_g('会员库')." values ('{$id}','{$null}','{$membername}', '{$phonenum}', '{$weixin}', '{$pinyin}', '{$born}', '{$year}', '{$month}', '{$day}', '{$null}', '{$null}', '{$payPwd}', '{$null}');");
     $GLOBALS['success'] = $rows>0;
     $GLOBALS['message'] = $rows<=0?  '添加失败!':'添加成功!';
 }
-function edit_category(){
+function edit_member(){
     global $current_edit_member;
 
     if(empty($_POST['payPwd'])){
@@ -50,7 +67,7 @@ function edit_category(){
     }
 
     // 接收并保存
-    $id = $current_edit_member[u_g('序号')];
+    $id = empty($_GET['id']) ? $current_edit_member[u_g('序号')]:$_GET['id'];
     $membername = empty($_POST['membername']) ? $current_edit_member[u_g('姓名')] : $_POST['membername'];
     $current_edit_member[u_g('姓名')] =$membername;
     $phonenum = empty($_POST['phonenumber']) ? $current_edit_member[u_g('手机号码')] : $_POST['phonenumber'];
@@ -64,16 +81,10 @@ function edit_category(){
     $year =empty($born)? '': explode('-',$born)[0];
     $month = empty($born)? '': explode('-',$born)[1];
     $day =  empty($born)? '': explode('-',$born)[2];
-    $cardover =empty($_POST['cardover']) ? $current_edit_member[u_g('卡余额')] : $_POST['cardover'];
-    $current_edit_member[u_g('卡余额')] =$cardover;
-    $consum_point = empty($_POST['consum_point']) ? $current_edit_member[u_g('消费积分')] : $_POST['consum_point'];
-    $current_edit_member[u_g('消费积分')] =$consum_point;
-    $consum_amount = empty($_POST['consum_amount']) ? $current_edit_member[u_g('消费金额')] : $_POST['consum_amount'];
-    $current_edit_member[u_g('消费金额')] =$consum_amount;
     $null='';
 
     // insert into categories values (null, 'slug', 'name');
-    $rows = cm_execute("update ".u_g('会员库')." set ".u_g('姓名')."='{$membername}',".u_g('手机号码')."='{$phonenum}',".u_g('微信号')."='{$weixin}',".u_g('出生年月')."='{$born}',".u_g('出生年')."='{$year}',".u_g('出生月')."='{$month}',".u_g('出生日')."='{$day}',".u_g('卡余额')."='{$cardover}',".u_g('消费积分')."='{$consum_point}',".u_g('消费金额')."='{$consum_amount}',".u_g('消费密码')."='{$payPwd}' where ".u_g('序号')."='{$id}';");
+    $rows = cm_execute("update ".u_g('会员库')." set ".u_g('姓名')."='{$membername}',".u_g('手机号码')."='{$phonenum}',".u_g('微信号')."='{$weixin}',".u_g('出生年月')."='{$born}',".u_g('出生年')."='{$year}',".u_g('出生月')."='{$month}',".u_g('出生日')."='{$day}',".u_g('消费密码')."='{$payPwd}' where ".u_g('序号')."='{$id}';");
     $GLOBALS['success'] = $rows>0;
     $GLOBALS['message'] = $rows<=0? '修改失败!':'修改成功!';
 }
@@ -82,13 +93,13 @@ function edit_category(){
 if($_SERVER['REQUEST_METHOD']==='POST'){
     //一旦表单提交请求并且没有通过url提交id，就意味着是要添加数据
     if(empty($_GET['id'])){
-        add_category();
+        add_member();
     }else{
-        edit_category();
+        edit_member();
     }
 }
 
-$member=cm_fetch_all('select * from '.u_g('会员库').';')
+$member=cm_fetch_all('select * from '.u_g('会员库').';');
 ?>
 <!doctype html>
 <html lang="en">
@@ -145,26 +156,13 @@ $member=cm_fetch_all('select * from '.u_g('会员库').';')
             </div>
         </div>
         <div class="form-group">
-            <label for="cardover" class="col-sm-2 control-label"><?php echo u_g('卡余额：') ?></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="cardover" name="cardover" value="<?php echo $current_edit_member[u_g('卡余额')]; ?>">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="consum_point" class="col-sm-2 control-label"><?php echo u_g('消费积分：') ?></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="consum_point" name="consum_point" value="<?php echo $current_edit_member[u_g('消费积分')]; ?>">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="consum_amount" class="col-sm-2 control-label"><?php echo u_g('消费金额：') ?></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="consum_amount" name="consum_amount" value="<?php echo $current_edit_member[u_g('消费金额')]; ?>">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary btn-block"><?php echo u_g('修改') ?></button>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary btn-block"><?php echo u_g('修改') ?></button>
+                <a href="/memberInformation.php" class="btn btn-primary btn-block"><?php echo u_g('返回添加') ?></a>
             </div>
         </div>
     </form>
@@ -173,19 +171,19 @@ $member=cm_fetch_all('select * from '.u_g('会员库').';')
         <div class="form-group">
             <label for="membername" class="col-sm-2 control-label"><?php echo u_g('会员姓名：') ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="membername" name="membername">
+                <input type="text" class="form-control" id="membername" name="membername" placeholder="<?php echo u_g('必填'); ?>">
             </div>
         </div>
         <div class="form-group">
             <label for="phonenumber" class="col-sm-2 control-label"><?php echo u_g('手机号码：') ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="phonenumber" name="phonenumber">
+                <input type="text" class="form-control" id="phonenumber" name="phonenumber" placeholder="<?php echo u_g('必填'); ?>">
             </div>
         </div>
         <div class="form-group">
             <label for="payPwd" class="col-sm-2 control-label"><?php echo u_g('消费密码：') ?></label>
             <div class="col-sm-10">
-                <input type="password" class="form-control" id="payPwd" name="payPwd">
+                <input type="password" class="form-control" id="payPwd" name="payPwd" placeholder="<?php echo u_g('必填'); ?>">
             </div>
         </div>
         <div class="form-group">
@@ -201,26 +199,8 @@ $member=cm_fetch_all('select * from '.u_g('会员库').';')
             </div>
         </div>
         <div class="form-group">
-            <label for="cardover" class="col-sm-2 control-label"><?php echo u_g('卡余额：') ?></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="cardover" name="cardover">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="consum_point" class="col-sm-2 control-label"><?php echo u_g('消费积分：') ?></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="consum_point" name="consum_point">
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="consum_amount" class="col-sm-2 control-label"><?php echo u_g('消费金额：') ?></label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="consum_amount" name="consum_amount">
-            </div>
-        </div>
-        <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary"><?php echo u_g('添加') ?></button>
+                <button type="submit" class="btn btn-primary btn-block"><?php echo u_g('添加') ?></button>
             </div>
         </div>
     </form>
@@ -263,7 +243,7 @@ $member=cm_fetch_all('select * from '.u_g('会员库').';')
                 <td><?php echo $item[u_g('消费金额')]; ?></td>
                 <td class="text-center">
                 <a href="/memberInformation.php?id=<?php echo $item[u_g('序号')]; ?>" class="btn btn-info btn-block"><?php echo u_g('编辑'); ?></a>
-                <a href="/member-delete.php?id=<?php echo $item[u_g('序号')]; ?>" class="btn btn-info btn-block"><?php echo u_g('删除'); ?></a>
+                <a href="/member-delete.php?id=<?php echo $item[u_g('序号')]; ?>" class="btn btn-danger btn-block"><?php echo u_g('删除'); ?></a>
                 </td>
             </tr>
             <?php endforeach ?>

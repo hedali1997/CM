@@ -26,6 +26,7 @@ function cm_fetch_all ($sql){
 
     $query=sqlsrv_query($conn, $sql);
     if(!$query){
+    die( print_r( sqlsrv_errors(), true));
     return false;
     }
 
@@ -36,7 +37,7 @@ function cm_fetch_all ($sql){
     // 断开连接，释放内容-----下面两条不写也行，php会自动断开，严谨点就该写
     sqlsrv_free_stmt($query);
     sqlsrv_close($conn);
-    return $result;
+    return isset($result)? $result:false;
 }
 function cm_fetch_one($sql){
     $res = cm_fetch_all($sql);
