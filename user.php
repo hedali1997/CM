@@ -1,7 +1,7 @@
 <?php
 require_once 'inc/function.php';
 // 判断用户是否登录一定是最先去做
-cm_get_current_user();
+$user=cm_get_current_user();
 
 ?>
 <!doctype html>
@@ -25,29 +25,24 @@ cm_get_current_user();
         <div class="form-group">
             <label for="loginName" class="col-sm-2 control-label"><?php echo u_g('登录名称：') ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="loginName" name="loginName"
-                       value="b">
+                <input type="text" class="form-control" id="loginName" name="loginName" value="<?php echo $user[u_g('登录名称')] ?>" disabled="disabled">
             </div>
         </div>
         <div class="form-group">
             <label for="trueName" class="col-sm-2 control-label"><?php echo u_g('真实姓名：') ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="trueName" name="trueName"
-                       value="贺大礼">
+                <input type="text" class="form-control" id="trueName" name="trueName" value="<?php echo $user[u_g('真实姓名')] ?>" disabled="disabled">
             </div>
         </div>
         <div class="form-group">
             <label for="permission" class="col-sm-2 control-label"><?php echo u_g('权限：') ?></label>
             <div class="col-sm-10">
-                <select class="form-control" name="permission" id="permission">
-                    <option><?php echo u_g('系统管理员') ?></option>
-                    <option><?php echo u_g('一般操作员') ?></option>
-                </select>
+                <input type="text" class="form-control" id="trueName" name="trueName" value="<?php echo $user[u_g('权限')] ?>" disabled="disabled">
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary"><?php echo u_g('修改') ?></button>
+                <a href="/users.php?id=<?php echo $user[u_g('用户编号')] ?>" class="btn btn-primary btn-block"><?php echo u_g('修改') ?></a>
             </div>
         </div>
     </form>

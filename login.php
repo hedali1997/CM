@@ -51,7 +51,6 @@ function login(){
   // $_SESSION['is_logged_in']=true;
   // 为了后续可以直接获取当前用户登录的信息，直接将用户信息放在SESSION中
   $_SESSION['current_login_user']=$user;
-
   //一切ok 可以跳转
   header('Location: /');
 }
@@ -63,7 +62,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 if($_SERVER['REQUEST_METHOD']==='GET' && isset($_GET['action']) && $_GET['action']==='logout'){
   // 删除了登录标识
   unset($_SESSION['current_login_user']);
-  echo "string";
 }
 
 ?>
@@ -96,7 +94,7 @@ if($_SERVER['REQUEST_METHOD']==='GET' && isset($_GET['action']) && $_GET['action
         <div class="form-group">
             <label for="password" class="col-sm-2 control-label"><?php echo u_g('登录密码：'); ?></label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="password" name="password"
+                <input type="password" class="form-control" id="password" name="password"
                        placeholder="<?php echo u_g('请输入登录密码'); ?>">
             </div>
         </div>

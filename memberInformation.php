@@ -83,7 +83,6 @@ function edit_member(){
     $day =  empty($born)? '': explode('-',$born)[2];
     $null='';
 
-    // insert into categories values (null, 'slug', 'name');
     $rows = cm_execute("update ".u_g('会员库')." set ".u_g('姓名')."='{$membername}',".u_g('手机号码')."='{$phonenum}',".u_g('微信号')."='{$weixin}',".u_g('出生年月')."='{$born}',".u_g('出生年')."='{$year}',".u_g('出生月')."='{$month}',".u_g('出生日')."='{$day}',".u_g('消费密码')."='{$payPwd}' where ".u_g('序号')."='{$id}';");
     $GLOBALS['success'] = $rows>0;
     $GLOBALS['message'] = $rows<=0? '修改失败!':'修改成功!';
@@ -114,9 +113,6 @@ $member=cm_fetch_all('select * from '.u_g('会员库').';');
     <style>
         .main{
             min-width: 640px;
-        }
-        .btn-block{
-            max-width: 320px;
         }
     </style>
 </head>

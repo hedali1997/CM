@@ -92,3 +92,9 @@ label{
 .form-control{
     max-width: 320px;
 }
+.col-md-8{
+    padding-bottom: 20px;
+}
+.btn-block{
+    max-width: 320px;
+}

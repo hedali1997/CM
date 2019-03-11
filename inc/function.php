@@ -75,3 +75,58 @@ function guid(){
         return $uuid;
     }
 }
+
+function get_sort($sort){
+    $info_sort=cm_fetch_all('select distinct '.u_g('商品种类').' from '.u_g('商品表').';');
+    for($i=0;$i<count($info_sort);$i++){
+        if($sort==('s'.$i)){
+            $sort=implode('',$info_sort[$i]);break;
+        }
+    }
+    return $sort;
+}
+function get_factory($sort,$factory){
+    $info_factory=cm_fetch_all('select distinct '.u_g('厂家').' from '.u_g('商品表').' where '.u_g('商品种类')."='{$sort}';");
+    for($i=0;$i<count($info_factory);$i++){
+        if($factory==('f'.$i)){
+            $factory=implode('',$info_factory[$i]);break;
+        }
+    }
+    return $factory;
+}
+function get_type($sort,$factory,$type){
+    $info_type=cm_fetch_all('select distinct '.u_g('型号').' from '.u_g('商品表').' where '.u_g('商品种类')."='{$sort}' and ".u_g('厂家')."='{$factory}';");
+    for($i=0;$i<count($info_type);$i++){
+        if($type==('t'.$i)){
+            $type=implode('',$info_type[$i]);break;
+        }
+    }
+    return $type;
+}
+function get_color($sort,$factory,$type,$color){
+    $info_color=cm_fetch_all('select distinct '.u_g('颜色').' from '.u_g('商品表').' where '.u_g('商品种类')."='{$sort}' and ".u_g('厂家')."='{$factory}' and ".u_g('型号')."='{$type}';");
+    for($i=0;$i<count($info_color);$i++){
+        if($color==('c'.$i)){
+            $color=implode('',$info_color[$i]);break;
+        }
+    }
+    return $color;
+}
+function get_size($sort,$factory,$type,$color,$size){
+    $info_size=cm_fetch_all('select distinct '.u_g('尺码').' from '.u_g('商品表').' where '.u_g('商品种类')."='{$sort}' and ".u_g('厂家')."='{$factory}' and ".u_g('型号')."='{$type}' and ".u_g('颜色')."='{$color}';");
+    for($i=0;$i<count($info_size);$i++){
+        if($size==('si'.$i)){
+            $size=implode('',$info_size[$i]);break;
+        }
+    }
+    return $size;
+}
+function get_material($sort,$factory,$type,$color,$size,$material){
+    $info_material=cm_fetch_all('select distinct '.u_g('尺码').' from '.u_g('商品表').' where '.u_g('商品种类')."='{$sort}' and ".u_g('厂家')."='{$factory}' and ".u_g('型号')."='{$type}' and ".u_g('颜色')."='{$color}' and ".u_g('尺码')."='{$size}';");
+    for($i=0;$i<count($info_material);$i++){
+        if($material==('si'.$i)){
+            $material=implode('',$info_material[$i]);break;
+        }
+    }
+    return $material;
+}

@@ -12,7 +12,12 @@ if (!empty($_GET['id'])){
 
 function recharge_member(){
     //校验，持久化，响应
-    if(empty($_POST['id']) && empty($_POST['rechargeAmount'])){
+    if(empty($_POST['id'])){
+        $GLOBALS['message'] = '此人不是会员，不能充值';
+        $GLOBALS['success'] = false;
+        return;
+    }
+    if(empty($_POST['rechargeAmount'])){
         $GLOBALS['message'] = '请完整填写表单！';
         $GLOBALS['success'] = false;
         return;
@@ -50,7 +55,6 @@ function recharge_member(){
     $GLOBALS['success'] = $rows_update>0 && $rows_insert>0;
     $GLOBALS['message'] = $rows_update<=0 && $rows_insert<=0?  '充值失败!':'充值成功!';
 }
-//如果修改操作与查询操作在一起，一定是先做修改，再查询
 if($_SERVER['REQUEST_METHOD']==='POST'){
     recharge_member();
 }
@@ -204,15 +208,10 @@ $member=cm_fetch_all('select '.u_g('序号').','.u_g('姓名').','.u_g('手机�
 <?php include 'inc/bottom.php'; ?>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script>
+<script>
     $(function($){// 入口函数
         // 1、单独作用域
         // 2、确保页面加载过后执行
-
-        // 目标：在用户输入自己的邮箱过后，页面展示这个邮箱的头像
-        // 实现：
-        // -时机：邮箱文本框失去焦点，并且能够拿到文本框中填写的邮箱时
-        // -事情：获取这个文本框中填写的邮箱对应的头像地址展示到上面的img元素上
         var phoneFormat = /0?(13|14|15|17|18)[0-9]{9}/;
         var nameFormat =  /^[\u4E00-\u9FA5\uf900-\ufa2d·s]{2,10}$/;//验证姓名正则
         $('#membername').on('blur',function(){//blur 失去焦点事件
@@ -257,6 +256,6 @@ $member=cm_fetch_all('select '.u_g('序号').','.u_g('姓名').','.u_g('手机�
         });
     });
 
-  </script>
+</script>
 </body>
 </html>

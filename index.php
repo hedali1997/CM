@@ -44,7 +44,7 @@ cm_get_current_user();
             </div>
             <div id="collapseTwo" class="panel-collapse collapse">
                 <a class="panel-body" href="storageDetails.php"><?php echo u_g('入库明细查询') ?></a>
-                <a class="panel-body" href="commodityInformation.php"><?php echo u_g('商品信息管理') ?></a>
+                <a class="panel-body" href="commodityInformation.php"><?php echo u_g('商品信息修改') ?></a>
                 <a class="panel-body" href="sellingPrice.php"><?php echo u_g('销售价格设置') ?></a>
                 <a class="panel-body" href="sellingDetails.php"><?php echo u_g('销售明细查询') ?></a>
                 <a class="panel-body" href="inventoryDetails.php"><?php echo u_g('库存明细查询') ?></a>

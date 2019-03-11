@@ -7,5 +7,5 @@ if(empty($_GET['id'])){
 
 $id =$_GET['id'];
 
-$rows=cm_execute("delete from ".u_g('会员库')." where ".u_g('序号')." in ('{$id}');");
+$rows=cm_execute("delete from ".u_g('支出明细表')." where ".u_g('序号')." ='{$id}';");
 header('Location: /memberInformation.php?delete=true');
